@@ -62,6 +62,7 @@ class Player():
         self.gunForce = 15
 
         self.shotsLeft = 10
+        self.socre = 0
 
         #sprite stuff
         self.angle = 0
@@ -134,7 +135,12 @@ class Player():
 
         #check clay shots using line intersections
         #do 6 spread lines from gun and check intersections with clays
-        shotAngles = [0, 15, -15, 30, -30]
+        shotAngles = []
+        spreadAngle = 30
+        for i in range(24):
+            shotAngle = -spreadAngle/2 + i * (spreadAngle/24)
+            shotAngles.append(shotAngle)
+
         numOfClaysShot = 0
         for i in range(len(shotAngles)):
             shotAngle = self.angle + shotAngles[i]
@@ -142,19 +148,17 @@ class Player():
             #get shot points
             s1 = self.pos
             angle_rad = math.radians(shotAngle)
-            x = math.cos(angle_rad)
-            y = math.sin(angle_rad)
-            s2 = (x * 800, y * 800)
+            s2 = (s1[0] + math.cos(angle_rad) * 1200, s1[1] + math.sin(angle_rad) * 1200)
 
-            pygame.draw.line(screen, (255, 0, 0), s1, s2, 4)
+            #pygame.draw.line(screen, (255, 0, 0), s1, s2, 4)
 
             for j in range(len(clays)):
                 #get 2 lines crossing the clay to get a "hitbox"
                 clay = clays[j]
-                p1 = (clay.pos[0] - 25, clay.pos[1])
-                p2 = (clay.pos[0] + 25, clay.pos[1])
-                p3 = (clay.pos[0], clay.pos[1] - 25)
-                p4 = (clay.pos[0], clay.pos[1] + 25)
+                p1 = (clay.pos[0] - 30, clay.pos[1])
+                p2 = (clay.pos[0] + 30, clay.pos[1])
+                p3 = (clay.pos[0], clay.pos[1] - 30)
+                p4 = (clay.pos[0], clay.pos[1] + 30)
 
                 #check if lines intersect
                 doesIntersect = False
@@ -236,7 +240,7 @@ def drawBackground():
 def spawnClay():
     rand = random.randint(0, 1)
     pos = [(-50, 700 - random.randint(0, 80)), (screenWidth + 50, 700 - random.randint(0, 80))][rand]
-    vel = [(12, -15), (-12, -15)][rand]
+    vel = [(12, -10), (-12, -10)][rand]
     angleVel = random.uniform(-90, 90)
 
     newClay = Clay(pos)
@@ -250,6 +254,9 @@ plyr = Player((400, 200))
 clays = []
 clayReqCooldown = 0 * 60
 clayCurrCooldown = 0
+
+font = pygame.font.SysFont(None, 120)
+fps = int(clock.get_fps())
 
 running = True
 while running:
@@ -266,6 +273,12 @@ while running:
             if event.button == 1:
                 if plyr.shotsLeft > 0:
                     plyr.shoot()
+                    plyr.shotsLeft -= 1
+
+                    print(plyr.shotsLeft)
+
+    fps_text = font.render(f"{plyr.shotsLeft}", True, (0, 0, 0))
+    screen.blit(fps_text, (screenWidth/2, screenHeight/2))
 
     #spawn clays
     clayCurrCooldown += 1
