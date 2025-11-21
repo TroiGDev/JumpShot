@@ -8,7 +8,7 @@ pygame.init()
 screenWidth = 800
 screenHeight = 800
 screen = pygame.display.set_mode((screenWidth, screenHeight))
-pygame.display.set_caption("PlanetSim")
+pygame.display.set_caption("JumpShot")
 
 #fps display
 clock = pygame.time.Clock()
@@ -62,12 +62,12 @@ class Player():
         self.gunForce = 15
 
         self.shotsLeft = 10
-        self.socre = 0
+        self.score = 0
 
         #sprite stuff
         self.angle = 0
         self.shadowYoffset = 15
-        self.originalImage = pygame.image.load("Assets/shotgun.png").convert_alpha()
+        self.originalImage = pygame.image.load("Assets/shotgun_white.png").convert_alpha()
         self.originalImage = pygame.transform.scale(self.originalImage, (150, 150 * 0.2616))
         self.image = self.originalImage
         self.rect = self.image.get_rect(center=(self.pos[0], self.pos[1]))
@@ -173,6 +173,7 @@ class Player():
                     clay.isDead = True
 
         self.shotsLeft += 2 * numOfClaysShot
+        self.score += numOfClaysShot
 
 class Clay():
     def __init__(self, pos):
@@ -191,14 +192,14 @@ class Clay():
         #sprite stuff
         self.angle = 0
         self.shadowYoffset = 15
-        self.originalImage = pygame.image.load("Assets/clay.png").convert_alpha()
-        self.originalImage = pygame.transform.scale(self.originalImage, (40, 40 * 0.985))
+        self.originalImage = pygame.image.load("Assets/target_white.png").convert_alpha()
+        self.originalImage = pygame.transform.scale(self.originalImage, (60, 60))
         self.image = self.originalImage
         self.rect = self.image.get_rect(center=(self.pos[0], self.pos[1]))
 
         #shadowstuff
-        self.originalImage_shdw = pygame.image.load("Assets/clay_shadow.png").convert_alpha()
-        self.originalImage_shdw = pygame.transform.scale(self.originalImage_shdw, (40, 40 * 0.985))
+        self.originalImage_shdw = pygame.image.load("Assets/target_shadow.png").convert_alpha()
+        self.originalImage_shdw = pygame.transform.scale(self.originalImage_shdw, (60, 60))
         self.image_shdw = self.originalImage_shdw
         self.rect_shdw = self.image_shdw.get_rect(center=(self.pos[0], self.pos[1] + self.shadowYoffset))
 
@@ -229,13 +230,40 @@ class Clay():
 
 # - - - - - -
 
-originalImage = pygame.image.load("Assets/background1.png").convert_alpha()
+#load images
+originalImage = pygame.image.load("Assets/background2.png").convert_alpha()
 originalImage = pygame.transform.scale(originalImage, (screenWidth, screenHeight))
 image = originalImage
 rect = image.get_rect(center=(screenWidth/2, screenHeight/2))
 
+#shells
+shellsImage = pygame.image.load("Assets/shells_white.png").convert_alpha()
+shellsImage = pygame.transform.scale(shellsImage, (70, 60))
+shellsImageProccessed = shellsImage
+rect1 = shellsImageProccessed.get_rect(center=(1/4 * screenWidth, screenHeight/2 - 120))
+
+shellsImageS = pygame.image.load("Assets/shells_shadow.png").convert_alpha()
+shellsImageS = pygame.transform.scale(shellsImageS, (70, 60))
+shellsImageProccessedS = shellsImageS
+rect1S = shellsImageProccessedS.get_rect(center=(1/4 * screenWidth, screenHeight/2 - 110))
+
+#targets
+targetsImage = pygame.image.load("Assets/target_white.png").convert_alpha()
+targetsImage = pygame.transform.scale(targetsImage, (60, 60))
+targetsImageProccessed = targetsImage
+rect2 = targetsImageProccessed.get_rect(center=(3/4 * screenWidth, screenHeight/2 - 120))
+
+targetsImageS = pygame.image.load("Assets/target_shadow.png").convert_alpha()
+targetsImageS = pygame.transform.scale(targetsImageS, (60, 60))
+targetsImageProccessedS = targetsImageS
+rect2S = targetsImageProccessedS.get_rect(center=(3/4 * screenWidth, screenHeight/2 - 110))
+
 def drawBackground():
     screen.blit(image, rect)
+    screen.blit(shellsImageProccessedS, rect1S)
+    screen.blit(targetsImageProccessedS, rect2S)
+    screen.blit(shellsImageProccessed, rect1)
+    screen.blit(targetsImageProccessed, rect2)
 
 def spawnClay():
     rand = random.randint(0, 1)
@@ -245,7 +273,7 @@ def spawnClay():
 
     newClay = Clay(pos)
     newClay.vel = vel
-    newClay.angleVel = angleVel
+    newClay.angleVel = 0
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -255,7 +283,7 @@ clays = []
 clayReqCooldown = 0 * 60
 clayCurrCooldown = 0
 
-font = pygame.font.SysFont(None, 120)
+font = pygame.font.SysFont(None, 90)
 fps = int(clock.get_fps())
 
 running = True
@@ -275,10 +303,19 @@ while running:
                     plyr.shoot()
                     plyr.shotsLeft -= 1
 
-                    print(plyr.shotsLeft)
+    #text shadows
+    shotsleft_text = font.render(f"{plyr.shotsLeft}", True, (200, 200, 200))
+    screen.blit(shotsleft_text, (1/4 * screenWidth - 30, screenHeight/2 - 55))
 
-    fps_text = font.render(f"{plyr.shotsLeft}", True, (0, 0, 0))
-    screen.blit(fps_text, (screenWidth/2, screenHeight/2))
+    score_text = font.render(f"{plyr.score}", True, (200, 200, 200))
+    screen.blit(score_text, (3/4 * screenWidth - 15, screenHeight/2 - 55))
+
+    #text front
+    shotsleft_text = font.render(f"{plyr.shotsLeft}", True, (255, 255, 255))
+    screen.blit(shotsleft_text, (1/4 * screenWidth - 30, screenHeight/2 - 60))
+
+    score_text = font.render(f"{plyr.score}", True, (255, 255, 255))
+    screen.blit(score_text, (3/4 * screenWidth - 15, screenHeight/2 - 60))
 
     #spawn clays
     clayCurrCooldown += 1
@@ -303,7 +340,7 @@ while running:
     if plyr.pos[1] > screenHeight + 500:
         running = False
 
-    displayFPS(screen, 20)
+    #displayFPS(screen, 20)
     pygame.display.flip()
     clock.tick(60)
 
