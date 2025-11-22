@@ -62,28 +62,21 @@ class Player():
         self.gravity = (0, 0.5)
         self.gunForce = 15
 
-<<<<<<< HEAD
         self.shotsLeft = 10
         self.score = 0
-=======
-        self.shotsLeft = 1000
-        self.socre = 0
->>>>>>> origin/bullets
 
         #sprite stuff
         self.angle = 0
         self.shadowYoffset = 15
-<<<<<<< HEAD
+
         self.originalImage = pygame.image.load("Assets/shotgun_white.png").convert_alpha()
-=======
-        self.originalImage = pygame.image.load("../Assets/shotgun.png").convert_alpha()
->>>>>>> origin/bullets
+
         self.originalImage = pygame.transform.scale(self.originalImage, (150, 150 * 0.2616))
         self.image = self.originalImage
         self.rect = self.image.get_rect(center=(self.pos[0], self.pos[1]))
 
         #shadowstuff
-        self.originalImage_shdw = pygame.image.load("../Assets/shotgun_shadow.png").convert_alpha()
+        self.originalImage_shdw = pygame.image.load("Assets/shotgun_shadow.png").convert_alpha()
         self.originalImage_shdw = pygame.transform.scale(self.originalImage_shdw, (150, 150 * 0.2616))
         self.image_shdw = self.originalImage_shdw
         self.rect_shdw = self.image_shdw.get_rect(center=(self.pos[0], self.pos[1] + self.shadowYoffset))
@@ -204,24 +197,18 @@ class Clay():
         #sprite stuff
         self.angle = 0
         self.shadowYoffset = 15
-<<<<<<< HEAD
+
         self.originalImage = pygame.image.load("Assets/target_white.png").convert_alpha()
         self.originalImage = pygame.transform.scale(self.originalImage, (60, 60))
-=======
-        self.originalImage = pygame.image.load("../Assets/clay.png").convert_alpha()
-        self.originalImage = pygame.transform.scale(self.originalImage, (40, 40 * 0.985))
->>>>>>> origin/bullets
+
         self.image = self.originalImage
         self.rect = self.image.get_rect(center=(self.pos[0], self.pos[1]))
 
         #shadowstuff
-<<<<<<< HEAD
+
         self.originalImage_shdw = pygame.image.load("Assets/target_shadow.png").convert_alpha()
         self.originalImage_shdw = pygame.transform.scale(self.originalImage_shdw, (60, 60))
-=======
-        self.originalImage_shdw = pygame.image.load("../Assets/clay_shadow.png").convert_alpha()
-        self.originalImage_shdw = pygame.transform.scale(self.originalImage_shdw, (40, 40 * 0.985))
->>>>>>> origin/bullets
+
         self.image_shdw = self.originalImage_shdw
         self.rect_shdw = self.image_shdw.get_rect(center=(self.pos[0], self.pos[1] + self.shadowYoffset))
 
@@ -259,7 +246,7 @@ class Bullet():
         self.x_move = x_move
         self.y_move = y_move
     def draw(self):
-        pygame.draw.circle(screen, (0, 0, 0), (self.px, self.py), 1)
+        pygame.draw.circle(screen, (255, 255, 255), (self.px, self.py), 1)
     def move(self):
         self.px += self.x_move * 120
         self.py += self.y_move * 120
@@ -267,12 +254,9 @@ class Bullet():
 
 # - - - - - -
 
-<<<<<<< HEAD
 #load images
 originalImage = pygame.image.load("Assets/background2.png").convert_alpha()
-=======
-originalImage = pygame.image.load("../Assets/background1.png").convert_alpha()
->>>>>>> origin/bullets
+
 originalImage = pygame.transform.scale(originalImage, (screenWidth, screenHeight))
 image = originalImage
 rect = image.get_rect(center=(screenWidth/2, screenHeight/2))
